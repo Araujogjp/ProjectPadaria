@@ -1,0 +1,16 @@
+# --- Arquivos Compilados (O bolo pronto) ---
+/build/
+/dist/
+*.class
+*.jar
+*.war
+
+# --- Arquivos Pessoais do NetBeans (NÃO ENVIAR) ---
+nbproject/private/
+
+# --- Arquivos de Sistema Temporários ---
+Thumbs.db
+.DS_Store
+
+# --- Logs de erro (Opcional, mas recomendado) ---
+*.log
