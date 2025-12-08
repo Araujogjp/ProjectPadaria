@@ -1,0 +1,1 @@
+create login Adm_Padaria with password = '1920';
