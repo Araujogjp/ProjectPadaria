@@ -1,2 +1,3 @@
-create login Adm_Padaria with password = '1920';
-alter server role sysadmin add member Adm_Padaria;
+Create Table tb_Pedidos(
+	Pedido_Id int primary key identity
+);
