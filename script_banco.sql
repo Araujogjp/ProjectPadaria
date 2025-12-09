@@ -78,4 +78,10 @@ Create Table Tb_Encomenda( -- Criando a tabela encomenda
 
 	-- Referenciando a chave estrangeira
 	FOREIGN KEY(Tb_PedidoidPedido) references Tb_Pedido(idPedido)
+<<<<<<< HEAD
 );
+=======
+);
+
+
+>>>>>>> dbec259188e1a33ea22c40ad796474348de15c83
