@@ -1,3 +1,6 @@
+--=============================================================================================
+-- DDL
+--=============================================================================================
 Create Database ProjectPadaria; -- Criando o banco de dados
 use ProjectPadaria; -- Usando o banco de dados
 
@@ -26,19 +29,93 @@ Create Table Tb_Pagamento( -- Criando a tabela pagamentos
 	statusPagto Varchar(30) not null
 );
 
+
+Create Table Tb_Cliente( -- Criando a tabela Cliente (Necessária para Tb_Pedido)
+	idCliente int primary key not null identity,
+	nome varchar(100) not null,
+	tipoDocumento bit, -- 0 CPF, 1 CNPJ
+	cpf_cnpj varchar(50) not null,
+	sexo bit
+);
+
+Create Table Tb_Produto( -- Criando a tabela Produto (Necessária para Tb_Pedido e Tb_ItensPedidos)
+	idProduto int primary key not null identity,
+	nome varchar(100) not null,
+	valor numeric(10, 2) not null,
+	disponivel bit not null,
+	qtdAtual int,
+	qtdRecomendada int,
+	-- Chave Estrangeira para Produção (se houver vínculo direto conforme DER)
+	Tb_ProducaoidProducao int,
+	FOREIGN KEY(Tb_ProducaoidProducao) references Tb_Producao(idProducao)
+);
+
+Create Table Tb_Fornecedor( -- Criando a tabela Fornecedor
+	idFornecedor int primary key not null identity,
+	matricula int,
+	nome varchar(100) not null,
+	sexo bit,
+	idade int
+);
+
+Create Table Tb_Endereco( -- Criando a tabela Endereco
+	idEndereco int primary key not null identity,
+	rua varchar(150),
+	nRua int,
+	bairro varchar(150),
+	cidade varchar(150),
+	estado varchar(150),
+	pais varchar(100),
+	-- Chaves Estrangeiras
+	Tb_ClienteidCliente int,
+	Tb_FornecedoridFornecedor int,
+	FOREIGN KEY(Tb_ClienteidCliente) references Tb_Cliente(idCliente),
+	FOREIGN KEY(Tb_FornecedoridFornecedor) references Tb_Fornecedor(idFornecedor)
+);
+
+Create Table Tb_Telefone( -- Criando a tabela Telefone
+	idTelefone int primary key not null identity,
+	numero varchar(20),
+	-- Chaves Estrangeiras
+	Tb_ClienteidCliente int,
+	Tb_FornecedoridFornecedor int,
+	FOREIGN KEY(Tb_ClienteidCliente) references Tb_Cliente(idCliente),
+	FOREIGN KEY(Tb_FornecedoridFornecedor) references Tb_Fornecedor(idFornecedor)
+);
+
+Create Table Tb_Entrada( -- Criando a tabela Entrada (Estoque)
+	idEntrada int primary key not null identity,
+	dataEntrada date not null,
+	valorCompra numeric(10, 2) not null,
+	quantidadeCompra int not null,
+	-- Chave Estrangeira
+	Tb_FornecedoridFornecedor int not null,
+	FOREIGN KEY(Tb_FornecedoridFornecedor) references Tb_Fornecedor(idFornecedor)
+);
+
+Create Table Tb_EntradaProdutos( -- Tabela Associativa de Entrada e Produtos
+	-- Chaves Estrangeiras como PK composta
+	Tb_EntradaidEntrada int not null,
+	Tb_ProdutoidProduto int not null,
+	valorUnitario numeric(10, 2),
+	qtdItem int,
+	PRIMARY KEY (Tb_EntradaidEntrada, Tb_ProdutoidProduto),
+	FOREIGN KEY(Tb_EntradaidEntrada) references Tb_Entrada(idEntrada),
+	FOREIGN KEY(Tb_ProdutoidProduto) references Tb_Produto(idProduto)
+);
+
+
 Create Table Tb_Pedido( -- Criando a tabela pedidos
 	idPedido Int Primary Key not null Identity,
 	valor_Final numeric(10, 2) not null,
 	statusPedido varchar(50) not null,
 	possuiPromo bit not null,
 	qtdTotalItens int not null,
-
 	-- Chaves Estrangeiras
 	Tb_ClienteidCliente int not null,
 	Tb_ProdutoidProduto int not null,
 	Tb_PromocaoidPromocao int not null,
 	Tb_PagamentoidPagamento int not null,
-
 	-- Referenciando as chaves estrangeiras
 	FOREIGN KEY(Tb_ClienteidCliente) references Tb_Cliente(idCliente),
 	FOREIGN KEY(Tb_ProdutoidProduto) references Tb_Produto(idProduto),
@@ -52,11 +129,9 @@ Create table Tb_ItensPedidos( -- Criando a tabela Itens pedidos
 	-- Chaves Estrangeiras
 	Tb_ProdutoidProduto int not null,
 	Tb_PedidoidPedido int not null,
-
 	idItemPedido int primary key not null identity,
 	valorTotal numeric(10, 2) not null,
 	qtdItem int not null,
-
 	-- Referenciando as chaves estrangeiras
 	FOREIGN KEY(Tb_ProdutoidProduto) references Tb_Produto(idProduto),
 	FOREIGN KEY(Tb_PedidoidPedido) references Tb_Pedido(idPedido)
@@ -72,16 +147,8 @@ Create Table Tb_Encomenda( -- Criando a tabela encomenda
 	statusEnc varchar(30) not null,
 	tipo bit not null,
 	valorFrete numeric(10, 2) not null,
-
 	-- Chave Estrangeira
 	Tb_PedidoidPedido int not null,
-
 	-- Referenciando a chave estrangeira
 	FOREIGN KEY(Tb_PedidoidPedido) references Tb_Pedido(idPedido)
-<<<<<<< HEAD
 );
-=======
-);
-
-
->>>>>>> dbec259188e1a33ea22c40ad796474348de15c83
